@@ -1,139 +1,208 @@
 import json
 import os
-data={}
-#____________________________________________________
-def read_data():
-    #print(">>> Running NEW version 0.2 of To-Do App <<<")
-    global data,filepath
-    filepath = input(r"Enter the File path:")
-    try:
-        if not os.path.exists(filepath):
-            print(f"{filepath} not found, creating new file...")
-            data = {"tasks": []}
-            with open(filepath, "w", encoding="utf-8") as f:
-                json.dump(data, f, indent=4)
-                return True
+import random as rd
+class TaskManager:
+    def __init__(self, filepath,username):
+        self.filepath = filepath
+        self._data = {"tasks": []}
+        self.username=username
+
+    #____________________________________________________
+    def read_data(self):
+        try:
+            if not os.path.exists(self.filepath):
+                print("📁 File not found. Creating new task file...")
+                self._data = {"tasks": []}
+                with open(self.filepath, "w", encoding="utf-8") as f:
+                    json.dump(self._data, f, indent=4)
+                print("✅ New file created successfully!")
+            else:
+                with open(self.filepath, "r", encoding='utf-8') as f:
+                    try:
+                        self._data = json.load(f)
+                        print("📂 Task data loaded successfully!")
+                    except json.JSONDecodeError:
+                        print("⚠️ File empty. Initializing new task list...")
+                        self._data = {"tasks": []}
+        except Exception as e:
+            print(f"❌ Unexpected error: {e}")
+
+    #____________________________________________________
+    def InputTaskDetails(self):
+        try:
+            task_no = int(input("🔢 Enter task number: "))
+            
+            for task in self._data['tasks']:
+                if task['Task_No'] == task_no:
+                    raise ValueError("⚠️ Task number already exists!")
+
+            task_info = input("📝 Enter task description: ")
+
+            if not (5 <= len(task_info) <= 30):
+                raise ValueError("⚠️ Description must be 5–30 characters!")
+
+            task = {
+                "Task_No": task_no,
+                "Description": task_info,
+                "Status": False
+            }
+
+            self._data['tasks'].append(task)
+            self.update_json()
+            print("🚀 Task added successfully!")
+
+        except ValueError as e:
+            print(e)
+
+    #____________________________________________________
+    def display(self):
+        if not self._data['tasks']:
+            print("📭 No tasks available. Add one!")
         else:
-            with open(filepath, "r", encoding='utf-8') as f:
-                try:
-                    data = json.load(f)
-                except json.JSONDecodeError:
-                    print("File empty, initializing new task list...")
-                    data = {"tasks": []}
-            if not isinstance(data, dict):
-                print("Error: JSON root element must be an object (dictionary)!")
-                return False
-    except Exception as e:
-        print(f"Unexpected error: {e}")
-        return False
-    else:
-        menu()
+            print("\n📋 Your Task List")
+            print(f"{'Task No.':<10}{'Description':<30}{'Status':<10}")
+            print("-" * 50)
 
-#____________________________________________________
-def InputTaskDetails():
-    global data
-    try:
-        task_no = int(input("Enter task no.:"))
-        for task in data['tasks']:
-            if task['Task_No'] == task_no:
-                raise ValueError("Task no already exists!")
-        task_info = input("Enter task description:")
-        if len(task_info) not in range(5, 30):
-            raise ValueError("Description must include characters in range (5–30)")
-        task = {
-            "Task_No": task_no,
-            "Description": task_info,
-            "Status": False
-        }
-        data['tasks'].append(task)
-        update_json()
-        print("Task added!")
-    except Exception as e:
-        print(f"Error: {e}")
+            for task in self._data['tasks']:
+                status = "✅ Done" if task['Status'] else "⏳ Pending"
+                print(f"{task['Task_No']:<10}{task['Description']:<30}{status:<10}")
 
-#____________________________________________________
-def display():
-    global data
-    if not data['tasks']:
-        print("Tasklist is empty!")
-    else:
-        print(f"{'Task No.':<10}{'Description':<30}{'Status':<10}")
-        print("-" * 50)
+    #____________________________________________________
+    def markComplete(self):
+        try:
+            taskComplete_no = int(input("✔️ Enter task number to mark complete: "))
+            found = False
+
+            for task in self._data['tasks']:
+                if task['Task_No'] == taskComplete_no:
+                    found = True
+                    if task['Status']:
+                        print("⚠️ Task already completed!")
+                    else:
+                        task['Status'] = True
+                        self.update_json()
+                        print("🎉 Task marked as completed!")
+
+            if not found:
+                print("❌ No task found with that number!")
+
+        except ValueError:
+            print("⚠️ Please enter a valid number!")
+
+    #____________________________________________________
+    def update_json(self):
+        with open(self.filepath, 'w', encoding='utf-8') as f:
+            json.dump(self._data, f, indent=4, ensure_ascii=False)
+        print("💾 Task list updated successfully!")
+
+    #____________________________________________________
+    def deleteTask(self):
+        try:
+            task_no = int(input("🗑️ Enter task number to delete: "))
+            found = False
+
+            for task in self._data['tasks']:
+                if task['Task_No'] == task_no:
+                    self._data['tasks'].remove(task)
+                    self.update_json()
+                    print(f"🗑️ Task {task_no} deleted successfully!")
+                    found = True
+                    break
+
+            if not found:
+                print("❌ No task found with that number!")
+
+        except ValueError:
+            print("⚠️ Please enter a valid number!")
+
+    #____________________________________________________
+    def menu(self):
+        menu = '''
+📌 [MENU]
++----------------------------+
+| 1️⃣  Add a new task         |
+| 2️⃣  Display all tasks      |
+| 3️⃣  Mark task completed    |
+| 4️⃣  Delete task            |
+| 5️⃣  Exit program           |
++----------------------------+
+'''
+        return menu
+    
+    #____________________________________________________
+
+    #____________________________________________________
+    def chatbot(self, userInput):
+        userInput = userInput.lower()
         
-        # Print each task
-        for task in data['tasks']:
-            status = "Done" if task['Status'] else "Pending"
-            print(f"{task['Task_No']:<10}{task['Description']:<30}{status:<10}")
+        greet = rd.choice([
+            "Hi there! 👋",
+            f"Hello {self.username}! 😊",
+            f"Hey {self.username}! Nice to see you again! 😄",
+            f"Welcome back {self.username}! ✨"
+        ])
+        
+        if any(word in userInput for word in ["hi", "hello", "hey"]):
+            print(greet)   
 
-#____________________________________________________
-def markComplete():
-    global data
-    taskComplete_no = int(input("Enter task no.:"))
-    found = False
-    try:
-        for task in data['tasks']:
-            if task['Task_No'] == taskComplete_no:
-                found = True
-                if task['Status']:
-                    print("Task already marked!")
-                else:
-                    task['Status'] = True
-                    update_json()
-                    print("Task completed")
-        if not found:
-            print("No task found!")
-        return True
-    except TypeError:
-        print("No task found!")
-        return False
+        elif "menu" in userInput:
+            print(self.menu())   
 
-#____________________________________________________
-def update_json():
-    global data, filepath
-    with open(filepath, 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=4, ensure_ascii=False)
-    print("Changes saved!")
-#____________________________________________________
-def deleteTask():
-    global data
-    try:
-        task_no = int(input("Enter task no. to delete: "))
-        found = False
-        for task in data['tasks']:
-            if task['Task_No'] == task_no:
-                data['tasks'].remove(task)
-                update_json()  
-                print(f"Task {task_no} deleted!")
-                found = True
-                break
-        if not found:
-            print("No task found with that number!")
-    except Exception as e:
-        print(f"Error: {e}")
-#____________________________________________________
-def menu():
-    print("\n*************[ Welcome To TO-DO List App ]*************")
-    while True:
-        print("\n---------------[MENU]---------------")
-        print("1. Add a new task.\n2. Display all tasks.\n3. Mark task completed.\n4. Delete Task.\n5. Exit program.")
-        choice = int(input("Enter choice no.:"))
-        match choice:
-            case 1:
-                InputTaskDetails()
-            case 2:
-                display()
-            case 3:
-                markComplete()
-            case 4:
-                deleteTask()
-            case 5:
-                print("Exited!")
-                break
-            case _:
-                print("Invalid choice!")
+        elif any(word in userInput for word in ["add", "new task"]):
+            self.InputTaskDetails()   
+
+        elif any(word in userInput for word in ["display", "show", "all tasks"]):
+            self.display()   
+
+        elif any(word in userInput for word in ["mark", "done", "completed"]):
+            self.markComplete()   
+
+        elif any(word in userInput for word in ["delete", "remove"]):
+            self.deleteTask()   
+
+        else:
+            print("🙃 Sorry, I couldn't understand. Can you rephrase that?")
+        
+
 
 #____________________________________________________
 if __name__ == "__main__":
-    filepath = r"C:\Users\HP\MyProjects\Python\Beginners\tasks.json"
-    read_data()
+    filepath = r"C:\Projects\Task Manager\tasks.json"
+    username = input("👤 Enter your name: ")
+    manager = TaskManager(filepath, username)
+    manager.read_data()
+    print(f"\n✨ *************[ Welcome {manager.username} To TO-DO List App ]************* ✨")
+    '''
+    print(kedar)
 
+    while True:
+        print(kedar.menu())
+
+        try:
+            choice = int(input("👉 Enter choice number: "))
+        except ValueError:
+            print("⚠️ Please enter a valid number!")
+            continue
+
+        match choice:
+            case 1:
+                kedar.InputTaskDetails()
+            case 2:
+                kedar.display()
+            case 3:
+                kedar.markComplete()
+            case 4:
+                kedar.deleteTask()
+            case 5:
+                print("👋 Exiting program... See you soon Kedar! ✨")
+                break
+            case _:
+                print("❌ Invalid choice!")
+    '''
+    while True:
+        userInput = input("You: ")
+        if any(word in userInput.lower() for word in ["quit", "exit", "end","bye"]):
+            print(f"👋 Goodbye {manager.username}! See you soon! ✨")
+            break   
+        print("Bot:", end=" ")
+        manager.chatbot(userInput)

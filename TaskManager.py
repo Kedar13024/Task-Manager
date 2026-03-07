@@ -1,13 +1,17 @@
 import json
 import os
 import random as rd
+from datetime import datetime   
+import dateparser
+
+
 class TaskManager:
-    def __init__(self, filepath,username):
+    def __init__(self, filepath, username):
         self.filepath = filepath
         self._data = {"tasks": []}
-        self.username=username
+        self.username = username
 
-    #____________________________________________________
+    # ____________________________________________________
     def read_data(self):
         try:
             if not os.path.exists(self.filepath):
@@ -17,7 +21,7 @@ class TaskManager:
                     json.dump(self._data, f, indent=4)
                 print("✅ New file created successfully!")
             else:
-                with open(self.filepath, "r", encoding='utf-8') as f:
+                with open(self.filepath, "r", encoding="utf-8") as f:
                     try:
                         self._data = json.load(f)
                         print("📂 Task data loaded successfully!")
@@ -27,59 +31,92 @@ class TaskManager:
         except Exception as e:
             print(f"❌ Unexpected error: {e}")
 
-    #____________________________________________________
-    def InputTaskDetails(self):
+    # ____________________________________________________
+    def InputTaskDetails(self, userInput=None):
         try:
             task_no = int(input("🔢 Enter task number: "))
-            
-            for task in self._data['tasks']:
-                if task['Task_No'] == task_no:
+
+            for task in self._data["tasks"]:
+                if task["Task_No"] == task_no:
                     raise ValueError("⚠️ Task number already exists!")
 
-            task_info = input("📝 Enter task description: ")
+            desc = input("📝 Enter task description: ")
+            due_input = input("⏰ Enter due date/Time: ")
+            parsed_date = dateparser.parse(
+                due_input,
+                settings={"PREFER_DATES_FROM": "future"}
+            )
 
-            if not (5 <= len(task_info) <= 30):
-                raise ValueError("⚠️ Description must be 5–30 characters!")
+            if not parsed_date:
+                print("⚠️ Invalid date format!")
+                return
+            priority = {
+                "high": "🔴",
+                "medium": "🟡",
+                "low": "🟢",
+                "normal": "⚪"
+                }
 
+            get_priority = input("⏺️Set Priority [High(🔴), Medium(🟡), Low(🟢), Normal(⚪)]: ")
+            get_priority = get_priority.strip().lower()
+            if get_priority not in priority:
+                raise ValueError("⚠️ Please enter valid priority.")
+     
             task = {
                 "Task_No": task_no,
-                "Description": task_info,
-                "Status": False
+                "Description": desc,
+                "Status": False,
+                "Due_Date": parsed_date.strftime("%Y-%m-%d %H:%M"),
+                "Priority": priority[get_priority]
             }
 
-            self._data['tasks'].append(task)
+            self._data["tasks"].append(task)
             self.update_json()
             print("🚀 Task added successfully!")
 
         except ValueError as e:
             print(e)
 
-    #____________________________________________________
+    # ____________________________________________________
     def display(self):
-        if not self._data['tasks']:
+        if not self._data["tasks"]:
             print("📭 No tasks available. Add one!")
-        else:
-            print("\n📋 Your Task List")
-            print(f"{'Task No.':<10}{'Description':<30}{'Status':<10}")
-            print("-" * 50)
+            return
 
-            for task in self._data['tasks']:
-                status = "✅ Done" if task['Status'] else "⏳ Pending"
-                print(f"{task['Task_No']:<10}{task['Description']:<30}{status:<10}")
+        print("\n📋 Your Task List")
+        print(f"{'Task':<6}{'Description':<30}{'Priority':<20}{'Status':<20}{'Remaining'}") 
+        print("-" * 80)
 
-    #____________________________________________________
+        for task in self._data["tasks"]:
+            remaining = self.dueDate(task["Due_Date"])
+
+            if remaining == "❌ Overdue":
+                status = "❌ Overdue"
+                remaining_time = "-"
+            else:
+                status = "✅ Done" if task["Status"] else "⏳ Pending"
+                remaining_time = remaining
+            print(
+                f"{task['Task_No']:<6}"
+                f"{task['Description'][:28]:<30}"
+                f"{task['Priority']:<16}"
+                f"{status:<20}"
+                f"{remaining_time}"
+            )
+
+    # ____________________________________________________
     def markComplete(self):
         try:
             taskComplete_no = int(input("✔️ Enter task number to mark complete: "))
             found = False
 
-            for task in self._data['tasks']:
-                if task['Task_No'] == taskComplete_no:
+            for task in self._data["tasks"]:
+                if task["Task_No"] == taskComplete_no:
                     found = True
-                    if task['Status']:
+                    if task["Status"]:
                         print("⚠️ Task already completed!")
                     else:
-                        task['Status'] = True
+                        task["Status"] = True
                         self.update_json()
                         print("🎉 Task marked as completed!")
 
@@ -89,21 +126,21 @@ class TaskManager:
         except ValueError:
             print("⚠️ Please enter a valid number!")
 
-    #____________________________________________________
+    # ____________________________________________________
     def update_json(self):
-        with open(self.filepath, 'w', encoding='utf-8') as f:
+        with open(self.filepath, "w", encoding="utf-8") as f:
             json.dump(self._data, f, indent=4, ensure_ascii=False)
         print("💾 Task list updated successfully!")
 
-    #____________________________________________________
+    # ____________________________________________________
     def deleteTask(self):
         try:
             task_no = int(input("🗑️ Enter task number to delete: "))
             found = False
 
-            for task in self._data['tasks']:
-                if task['Task_No'] == task_no:
-                    self._data['tasks'].remove(task)
+            for task in self._data["tasks"]:
+                if task["Task_No"] == task_no:
+                    self._data["tasks"].remove(task)
                     self.update_json()
                     print(f"🗑️ Task {task_no} deleted successfully!")
                     found = True
@@ -115,9 +152,28 @@ class TaskManager:
         except ValueError:
             print("⚠️ Please enter a valid number!")
 
-    #____________________________________________________
+    # ____________________________________________________
+    def dueDate(self, due_date_str):   
+        due_date = datetime.strptime(due_date_str, "%Y-%m-%d %H:%M")
+        now = datetime.now()
+
+        remaining = due_date - now
+
+        if remaining.total_seconds() < 0:
+            return "❌ Overdue"
+
+        if remaining.days == 0 and remaining.seconds <= 3600:
+            return "⚠️ Due soon"
+
+        days = remaining.days
+        hours = remaining.seconds // 3600
+        minutes = (remaining.seconds % 3600) // 60
+
+        return f"{days}d {hours}h {minutes}m left"
+
+    # ____________________________________________________
     def menu(self):
-        menu = '''
+        menu = """
 📌 [MENU]
 +----------------------------+
 | 1️⃣  Add a new task         |
@@ -126,83 +182,62 @@ class TaskManager:
 | 4️⃣  Delete task            |
 | 5️⃣  Exit program           |
 +----------------------------+
-'''
+"""
         return menu
-    
-    #____________________________________________________
 
-    #____________________________________________________
+    # ____________________________________________________
     def chatbot(self, userInput):
-        userInput = userInput.lower()
-        
+        userInput_lower = userInput.lower()
+
         greet = rd.choice([
             "Hi there! 👋",
             f"Hello {self.username}! 😊",
             f"Hey {self.username}! Nice to see you again! 😄",
-            f"Welcome back {self.username}! ✨"
+            f"Welcome back {self.username}! ✨",
         ])
-        
-        if any(word in userInput for word in ["hi", "hello", "hey"]):
-            print(greet)   
 
-        elif "menu" in userInput:
-            print(self.menu())   
+        if any(word in userInput_lower for word in ["hi", "hello", "hey"]):
+            print(greet)
 
-        elif any(word in userInput for word in ["add", "new task"]):
-            self.InputTaskDetails()   
+        elif "menu" in userInput_lower:
+            print(self.menu())
 
-        elif any(word in userInput for word in ["display", "show", "all tasks"]):
-            self.display()   
+        elif "add" in userInput_lower or "new task" in userInput_lower:
+            self.InputTaskDetails()
 
-        elif any(word in userInput for word in ["mark", "done", "completed"]):
-            self.markComplete()   
+        elif any(word in userInput_lower for word in ["display", "show", "all tasks"]):
+            self.display()
 
-        elif any(word in userInput for word in ["delete", "remove"]):
-            self.deleteTask()   
+        elif any(word in userInput_lower for word in ["mark", "done", "completed"]):
+            self.markComplete()
+
+        elif any(word in userInput_lower for word in ["delete", "remove"]):
+            self.deleteTask()
 
         else:
             print("🙃 Sorry, I couldn't understand. Can you rephrase that?")
-        
 
 
-#____________________________________________________
+# ____________________________________________________
 if __name__ == "__main__":
-    filepath = r"C:\Projects\Task Manager\tasks.json"
+    filepath = r"C:\Users\HP\Data Science\Python basic projects\Projects\sample.json"
     username = input("👤 Enter your name: ")
     manager = TaskManager(filepath, username)
-    manager.read_data()
+    manager.read_data()   
     print(f"\n✨ *************[ Welcome {manager.username} To TO-DO List App ]************* ✨")
-    '''
-    print(kedar)
-
-    while True:
-        print(kedar.menu())
-
-        try:
-            choice = int(input("👉 Enter choice number: "))
-        except ValueError:
-            print("⚠️ Please enter a valid number!")
-            continue
-
-        match choice:
-            case 1:
-                kedar.InputTaskDetails()
-            case 2:
-                kedar.display()
-            case 3:
-                kedar.markComplete()
-            case 4:
-                kedar.deleteTask()
-            case 5:
-                print("👋 Exiting program... See you soon Kedar! ✨")
-                break
-            case _:
-                print("❌ Invalid choice!")
-    '''
+    print("""
+💡 Try commands like:
+- add task finish homework 
+- show all tasks
+- mark the task that i completed
+- I want to delete the task
+- show me menu bar
+- exit from app
+""")
     while True:
         userInput = input("You: ")
-        if any(word in userInput.lower() for word in ["quit", "exit", "end","bye"]):
+        if any(word in userInput.lower() for word in ["quit", "exit", "end", "bye"]):
             print(f"👋 Goodbye {manager.username}! See you soon! ✨")
-            break   
+            break
         print("Bot:", end=" ")
         manager.chatbot(userInput)

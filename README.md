@@ -1,144 +1,222 @@
-# 🗂️ Task Manager (Python + JSON + Chatbot)
-> A beginner-friendly, interactive command-line Task Manager built with Python.
-It stores tasks in a JSON file and supports adding, displaying, marking tasks as completed, deleting tasks, and auto-saving changes — now with a simple chatbot interface 🤖✨
+# ??? Task Manager
 
-## 🚀 Features
+A command-line task manager built with Python. Tasks are stored in `mytasks.json` and managed through a simple chatbot-style interface.
 
-- 📂 Persistent storage using JSON files
-- 👤 Personalized experience (asks for your name)
-- 🤖 Chatbot-style interaction (type commands like "add", "show", "delete")
-- ➕ Add new tasks with validation
-    1. Unique task number
-    2. Description length between 5–30 characters
-- 📋 Display tasks in a neat tabular format
-- ✅ Mark tasks as completed
-- 🗑️ Delete tasks
-- 💾 Auto-save after every change
-- 🖥️ Interactive loop (type exit to quit)
-## 🧰 Requirements
+## ?? Features
 
-- Python 3.10+ (uses match statement if menu mode enabled)
-- No external libraries required
-- Works on Windows / macOS / Linux
+- ?? Persistent JSON storage
+- ?? Personalized greeting using the user's name
+- ?? Natural-language style commands such as `add`, `show`, `done`, and `delete`
+- ?? Task fields for ID, description, status, due date, and priority
+- ?? Filters for all, completed, pending, and overdue tasks
+- ?? Auto-save after add, update, and delete actions
 
-## ▶️ How to Run
-- `cmd: python TaskManager.py`
+## ?? Requirements
 
-- You will be prompted:
-`👤 Enter your name: Kedar`
+- Python 3.10+
+- `dateparser`
+- Works on Windows, macOS, and Linux
 
-- If the JSON file doesn’t exist, it will be created automatically:
-   ```
-    1. 📁 File not found. Creating new task file...
-    2. ✅ New file created successfully!
-    ```
-## 🤖 Chatbot Commands
-- #### Instead of using numbers, you can type:
-```
-+------------------------------------+
-|  Command	   --->       Action     |
-+------------------------------------+
-|  hi, hello    |	 Greet the bot   |
-+------------------------------------+
-|  menu	        |       Show menu    |
-+------------------------------------+
-|  add	        |    Add a new task  |
-+------------------------------------+
-| show, display	|     Display tasks  |
-+------------------------------------+
-|  mark, done	| Mark task completed|
-+------------------------------------+
-| delete,remove |   Delete task      |
-+------------------------------------+
-| exit, quit    |  Exit program      |
-+------------------------------------+
+## ?? Installation
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
 ```
 
-## 🖥️ Example Interaction
+## ?? Run
+
+Start the app with:
+
+```bash
+python main.py
 ```
-✨ *************[ Welcome Kedar To TO-DO List App ]************* ✨
-You:  Hi Bot
-Bot: Welcome back Kedar! ✨
-You:  Can you show me tasklist.
-Bot: 📭 No tasks available. Add one!
-You:  Then add new task
-Bot: 
-🔢 Enter task number:  1
-📝 Enter task description:  Add another features
-💾 Task list updated successfully!
-🚀 Task added successfully!
-You:  now show me tasklist
 
-Bot: 
-📋 Your Task List
-Task No.  Description                   Status    
---------------------------------------------------
-1         Add another features          ⏳ Pending
+You will be prompted for your name, then the app loads `mytasks.json`. If the file does not exist, it is created automatically.
 
-You:  mark it complete
-Bot: 
-✔️ Enter task number to mark complete:  1
-💾 Task list updated successfully!
-🎉 Task marked as completed!
+## ?? Project Files
 
-You:  show
-Bot: 
-📋 Your Task List
-Task No.  Description                   Status    
---------------------------------------------------
-1         Add another features          ✅ Done  
+- `main.py` - entry point and interactive loop
+- `task_manager.py` - task storage and task operations
+- `chatbot.py` - regex-based command parsing
+- `util.py` - due date calculations
+- `mytasks.json` - persisted task data
 
-You:  delete
-Bot: 
-🗑️ Enter task number to delete:  1
-💾 Task list updated successfully!
-🗑️ Task 1 deleted successfully!
+## ?? Chatbot Commands
 
-You:  show
-Bot: 📭 No tasks available. Add one!
+The chatbot recognizes intent from text, not only fixed commands.
 
-You:  quit
-👋 Goodbye Kedar! See you soon! ✨
-📁 JSON File Format
+- ?? Greeting: `hi`, `hello`, `hey`
+- ? Add task: messages containing `add` or `new`
+- ?? Show tasks: `show`, `display`
+- ? Mark complete: `mark`, `complete`, `done` with a task number
+- ??? Delete task: `delete`, `remove`, `erase`, `cancel` with a task number
+- ?? Exit: `exit`, `quit`, `bye`, `end`
+
+## ? Add Task Format
+
+Adding a task currently requires:
+
+- ?? A task description
+- ?? A due date the parser can understand
+- ??? An optional priority: `high`, `medium`, `low`, or `normal`
+- ?? An optional task ID; otherwise the app assigns the next number
+
+Examples:
+
+```text
+add finish report due tomorrow high
+add buy groceries by 2026-03-15 low
+add submit assignment id 7 due today medium
 ```
-## Tasks are stored in this structure:
+
+If no due date is provided, the task will not be added.
+
+## ?? Display Filters
+
+The app supports these display modes through chatbot input:
+
+- `show` or `display` - all tasks
+- `show completed` - completed tasks
+- `show pending` - pending tasks
+- `show overdue` - overdue tasks
+- `show menu` - menu output
+
+## ?? Demo Conversation
+
+The chatbot uses random reply variants for greetings, add, delete, mark-complete, and error messages, so the exact wording may differ. The conversation below is a realistic sample based on the current code.
+
+```text
+Program: ?? Enter your name: Kedar
+Program: ?? Task data loaded successfully!
+Program:
+Program: ? Welcome Kedar to the TO-DO Assistant ?
+
+You: hello
+Bot: Welcome back Kedar! ?
+
+You: show
+Bot: ?? No tasks available. Add one!
+
+You: show menu
+Bot: ?? No tasks available. Add one!
+
+You: add finish python assignment
+Bot: ?? Please enter valid date!
+
+You: add finish python assignment due tomorrow high
+Bot: ?? Task added successfully!
+
+You: add buy groceries by 2026-03-15 low
+Bot: Your task has been added!
+
+You: add renew passport id 7 due 2025-01-01 medium
+Bot: Done! Task saved successfully.
+
+You: show
+Bot:
+Bot: ?? Your Task List
+Bot: ------------------------------------------------------------------------------------------
+Bot: Task  Description                   Priority        Status              Due Time
+Bot: ------------------------------------------------------------------------------------------
+Bot: 1     finish python assignment      ??              ? Pending           0d 12h 0m left
+Bot: ------------------------------------------------------------------------------------------
+Bot: 2     buy groceries                 ??              ? Pending           4d 6h 0m left
+Bot: ------------------------------------------------------------------------------------------
+Bot: 7     renew passport                ??              ? Overdue           -
+Bot: ------------------------------------------------------------------------------------------
+
+You: show pending
+Bot:
+Bot: ?? Your Task List
+Bot: ------------------------------------------------------------------------------------------
+Bot: Task  Description                   Priority        Status              Due Time
+Bot: ------------------------------------------------------------------------------------------
+Bot: 1     finish python assignment      ??              ? Pending           0d 12h 0m left
+Bot: ------------------------------------------------------------------------------------------
+Bot: 2     buy groceries                 ??              ? Pending           4d 6h 0m left
+Bot: ------------------------------------------------------------------------------------------
+Bot: 7     renew passport                ??              ? Overdue           -
+Bot: ------------------------------------------------------------------------------------------
+
+You: show overdue
+Bot:
+Bot: ?? Your Task List
+Bot: ------------------------------------------------------------------------------------------
+Bot: Task  Description                   Priority        Status              Due Time
+Bot: ------------------------------------------------------------------------------------------
+Bot: 7     renew passport                ??              ? Overdue           -
+Bot: ------------------------------------------------------------------------------------------
+
+You: done 2
+Bot: Task successfully completed.
+
+You: show completed
+Bot:
+Bot: ?? Your Task List
+Bot: ------------------------------------------------------------------------------------------
+Bot: Task  Description                   Priority        Status              Due Time
+Bot: ------------------------------------------------------------------------------------------
+Bot: 2     buy groceries                 ??              ? Done              -
+Bot: ------------------------------------------------------------------------------------------
+
+You: show menu
+Bot:
+Bot: ?? [MENU]
+Bot: +----------------------------+
+Bot: | 1??  Add a new task         |
+Bot: | 2??  Display all tasks      |
+Bot: | 3??  Mark task completed    |
+Bot: | 4??  Delete task            |
+Bot: | 5??  Exit program           |
+Bot: +----------------------------+
+
+You: remove 7
+Bot: Task removed successfully. ???
+
+You: tell me a joke
+Bot: Sorry, I didn't understand that. ??
+
+You: quit
+Program: ?? Task list updated successfully!
+Program: ?? Goodbye Kedar!
 ```
+
+Notes about the current behavior:
+
+- `show menu` only displays the menu when at least one task already exists.
+- `show pending` also includes overdue tasks, because overdue tasks still have `Status = false`.
+- The exact remaining-time text changes based on the current date and time.
+
+## ?? JSON Structure
+
+Tasks are stored like this:
+
+```json
 {
-    "tasks": [
-        {
-            "Task_No": 1,
-            "Description": "Buy groceries",
-            "Status": false
-        },
-        {
-            "Task_No": 2,
-            "Description": "Finish report",
-            "Status": true
-        }
-    ]
+  "tasks": [
+    {
+      "Task_No": 1,
+      "Description": "Buy groceries",
+      "Status": false,
+      "Due_Date": "2026-03-15 18:00",
+      "Priority": "symbol for selected priority"
+    }
+  ]
 }
 ```
-## 🧠 What This Project Demonstrates
 
-1. __Object-Oriented Programming (OOP)__
-2. __File Handling in Python__
-3. __JSON Read/Write operations__
-4. __Exception Handling__
-5. __Input Validation__
-6. __Basic Command Parsing (Chatbot Logic)__
-7. __Clean CLI Formatting__
+## ??? Implementation Notes
 
-## 🔮 Future Improvements
+- The application stores priority internally as a symbol, even though the user types `high`, `medium`, `low`, or `normal`.
+- Overdue and remaining time are calculated when tasks are displayed.
+- Some console text in the current source files shows encoding issues on some terminals, but the core functionality still runs.
 
-- 📅 Add due dates
-- 🏷️ Add priority levels
-- 🔍 Search tasks
-- 🎨 Add colored terminal output
-- 🖼️ Convert to GUI (Tkinter)
-- 🌐 Convert to Web App (Flask / Django)
+## ?? What This Project Demonstrates
 
-
-## 🛠️ Troubleshooting
-- Not writing to file → Ensure you enter a valid file path when prompted. The program will create the file if it doesn’t exist, but the directory must exist.
-- Old version runs when importing → Delete the` __pycache__` folder or run with `python -B. Use print(TaskManager.__file__) `to confirm which file is being imported.
-
+1. Object-oriented Python design
+2. JSON file handling
+3. Input parsing with regular expressions
+4. Basic validation and persistence
+5. CLI-based task management

@@ -1,23 +1,23 @@
-# ??? Task Manager
+﻿# 🗂️ Task Manager
 
 A command-line task manager built with Python. Tasks are stored in `mytasks.json` and managed through a simple chatbot-style interface.
 
-## ?? Features
+## 🚀 Features
 
-- ?? Persistent JSON storage
-- ?? Personalized greeting using the user's name
-- ?? Natural-language style commands such as `add`, `show`, `done`, and `delete`
-- ?? Task fields for ID, description, status, due date, and priority
-- ?? Filters for all, completed, pending, and overdue tasks
-- ?? Auto-save after add, update, and delete actions
+- 📂 Persistent JSON storage
+- 👤 Personalized greeting using the user's name
+- 🤖 Natural-language style commands such as `add`, `show`, `done`, and `delete`
+- 📝 Task fields for ID, description, status, due date, and priority
+- 📋 Filters for all, completed, pending, and overdue tasks
+- 💾 Auto-save after add, update, and delete actions
 
-## ?? Requirements
+## 🧰 Requirements
 
 - Python 3.10+
 - `dateparser`
 - Works on Windows, macOS, and Linux
 
-## ?? Installation
+## 📦 Installation
 
 Install dependencies:
 
@@ -25,7 +25,7 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-## ?? Run
+## ▶️ Run
 
 Start the app with:
 
@@ -35,7 +35,7 @@ python main.py
 
 You will be prompted for your name, then the app loads `mytasks.json`. If the file does not exist, it is created automatically.
 
-## ?? Project Files
+## 📁 Project Files
 
 - `main.py` - entry point and interactive loop
 - `task_manager.py` - task storage and task operations
@@ -43,25 +43,25 @@ You will be prompted for your name, then the app loads `mytasks.json`. If the fi
 - `util.py` - due date calculations
 - `mytasks.json` - persisted task data
 
-## ?? Chatbot Commands
+## 🤖 Chatbot Commands
 
 The chatbot recognizes intent from text, not only fixed commands.
 
-- ?? Greeting: `hi`, `hello`, `hey`
-- ? Add task: messages containing `add` or `new`
-- ?? Show tasks: `show`, `display`
-- ? Mark complete: `mark`, `complete`, `done` with a task number
-- ??? Delete task: `delete`, `remove`, `erase`, `cancel` with a task number
-- ?? Exit: `exit`, `quit`, `bye`, `end`
+- 👋 Greeting: `hi`, `hello`, `hey`
+- ➕ Add task: messages containing `add` or `new`
+- 📋 Show tasks: `show`, `display`
+- ✅ Mark complete: `mark`, `complete`, `done` with a task number
+- 🗑️ Delete task: `delete`, `remove`, `erase`, `cancel` with a task number
+- 👋 Exit: `exit`, `quit`, `bye`, `end`
 
-## ? Add Task Format
+## ➕ Add Task Format
 
 Adding a task currently requires:
 
-- ?? A task description
-- ?? A due date the parser can understand
-- ??? An optional priority: `high`, `medium`, `low`, or `normal`
-- ?? An optional task ID; otherwise the app assigns the next number
+- 📝 A task description
+- 📅 A due date the parser can understand
+- 🏷️ An optional priority: `high`, `medium`, `low`, or `normal`
+- 🔢 An optional task ID; otherwise the app assigns the next number
 
 Examples:
 
@@ -73,7 +73,7 @@ add submit assignment id 7 due today medium
 
 If no due date is provided, the task will not be added.
 
-## ?? Display Filters
+## 📋 Display Filters
 
 The app supports these display modes through chatbot input:
 
@@ -83,30 +83,30 @@ The app supports these display modes through chatbot input:
 - `show overdue` - overdue tasks
 - `show menu` - menu output
 
-## ?? Demo Conversation
+## 💬 Demo Conversation
 
 The chatbot uses random reply variants for greetings, add, delete, mark-complete, and error messages, so the exact wording may differ. The conversation below is a realistic sample based on the current code.
 
 ```text
-Program: ?? Enter your name: Kedar
-Program: ?? Task data loaded successfully!
-Program:
-Program: ? Welcome Kedar to the TO-DO Assistant ?
+Program: 👤 Enter your name: Kedar
+Program: 📂 Task data loaded successfully!
+
+Program: ✨ Welcome Kedar to the TO-DO Assistant ✨
 
 You: hello
-Bot: Welcome back Kedar! ?
+Bot: Welcome back Kedar! ✨
 
 You: show
-Bot: ?? No tasks available. Add one!
+Bot: 💭 No tasks available. Add one!
 
 You: show menu
-Bot: ?? No tasks available. Add one!
+Bot: 💭 No tasks available. Add one!
 
 You: add finish python assignment
-Bot: ?? Please enter valid date!
+Bot: ⚠️ Please enter valid date!
 
 You: add finish python assignment due tomorrow high
-Bot: ?? Task added successfully!
+Bot: 🚀 Task added successfully!
 
 You: add buy groceries by 2026-03-15 low
 Bot: Your task has been added!
@@ -116,71 +116,88 @@ Bot: Done! Task saved successfully.
 
 You: show
 Bot:
-Bot: ?? Your Task List
-Bot: ------------------------------------------------------------------------------------------
-Bot: Task  Description                   Priority        Status              Due Time
-Bot: ------------------------------------------------------------------------------------------
-Bot: 1     finish python assignment      ??              ? Pending           0d 12h 0m left
-Bot: ------------------------------------------------------------------------------------------
-Bot: 2     buy groceries                 ??              ? Pending           4d 6h 0m left
-Bot: ------------------------------------------------------------------------------------------
-Bot: 7     renew passport                ??              ? Overdue           -
-Bot: ------------------------------------------------------------------------------------------
+ 📋 Your Task List
+ ------------------------------------------------------------------------------------------
+ Task  Description                   Priority        Status              Due Time
+ ------------------------------------------------------------------------------------------
+ 1     finish python assignment      🔴              ⏳ Pending           0d 12h 0m left
+ ------------------------------------------------------------------------------------------
+ 2     buy groceries                 🟢              ⏳ Pending           4d 6h 0m left
+ ------------------------------------------------------------------------------------------
+ 7     renew passport                🟡              ❌ Overdue           -
+ ------------------------------------------------------------------------------------------
 
 You: show pending
 Bot:
-Bot: ?? Your Task List
-Bot: ------------------------------------------------------------------------------------------
-Bot: Task  Description                   Priority        Status              Due Time
-Bot: ------------------------------------------------------------------------------------------
-Bot: 1     finish python assignment      ??              ? Pending           0d 12h 0m left
-Bot: ------------------------------------------------------------------------------------------
-Bot: 2     buy groceries                 ??              ? Pending           4d 6h 0m left
-Bot: ------------------------------------------------------------------------------------------
-Bot: 7     renew passport                ??              ? Overdue           -
-Bot: ------------------------------------------------------------------------------------------
+ 📋 Your Task List
+ ------------------------------------------------------------------------------------------
+ Task  Description                   Priority        Status              Due Time
+ ------------------------------------------------------------------------------------------
+ 1     finish python assignment      🔴              ⏳ Pending           0d 12h 0m left
+ ------------------------------------------------------------------------------------------
+ 2     buy groceries                 🟢              ⏳ Pending           4d 6h 0m left
+ ------------------------------------------------------------------------------------------
+ 7     renew passport                🟡              ❌ Overdue           -
+ ------------------------------------------------------------------------------------------
 
 You: show overdue
 Bot:
-Bot: ?? Your Task List
-Bot: ------------------------------------------------------------------------------------------
-Bot: Task  Description                   Priority        Status              Due Time
-Bot: ------------------------------------------------------------------------------------------
-Bot: 7     renew passport                ??              ? Overdue           -
-Bot: ------------------------------------------------------------------------------------------
+ 📋 Your Task List
+ ------------------------------------------------------------------------------------------
+ Task  Description                   Priority        Status              Due Time
+ ------------------------------------------------------------------------------------------
+ 7     renew passport                🟡              ❌ Overdue           -
+ ------------------------------------------------------------------------------------------
 
 You: done 2
 Bot: Task successfully completed.
 
 You: show completed
 Bot:
-Bot: ?? Your Task List
-Bot: ------------------------------------------------------------------------------------------
-Bot: Task  Description                   Priority        Status              Due Time
-Bot: ------------------------------------------------------------------------------------------
-Bot: 2     buy groceries                 ??              ? Done              -
-Bot: ------------------------------------------------------------------------------------------
+ 📋 Your Task List
+ ------------------------------------------------------------------------------------------
+ Task  Description                   Priority        Status              Due Time
+ ------------------------------------------------------------------------------------------
+ 2     buy groceries                 🟢              ✅ Done              -
+ ------------------------------------------------------------------------------------------
+
+You: done 1 7
+Bot: I've marked that task as finished.
+Bot: Task successfully completed.
+
+You: show completed
+Bot:
+ 📋 Your Task List
+ ------------------------------------------------------------------------------------------
+ Task  Description                   Priority        Status              Due Time
+ ------------------------------------------------------------------------------------------
+ 1     finish python assignment      🔴              ✅ Done              -
+ ------------------------------------------------------------------------------------------
+ 2     buy groceries                 🟢              ✅ Done              -
+ ------------------------------------------------------------------------------------------
+ 7     renew passport                🟡              ✅ Done           -
+ ------------------------------------------------------------------------------------------
 
 You: show menu
 Bot:
-Bot: ?? [MENU]
-Bot: +----------------------------+
-Bot: | 1??  Add a new task         |
-Bot: | 2??  Display all tasks      |
-Bot: | 3??  Mark task completed    |
-Bot: | 4??  Delete task            |
-Bot: | 5??  Exit program           |
-Bot: +----------------------------+
+ 📌 [MENU]
+ +----------------------------+
+ | 1️⃣  Add a new task         |
+ | 2️⃣  Display all tasks      |
+ | 3️⃣  Mark task completed    |
+ | 4️⃣  Delete task            |
+ | 5️⃣  Exit program           |
+ +----------------------------+
 
 You: remove 7
-Bot: Task removed successfully. ???
+Bot: Task removed successfully. 🗑️
 
 You: tell me a joke
-Bot: Sorry, I didn't understand that. ??
+Bot: Sorry, I didn't understand that. 🤔
 
 You: quit
-Program: ?? Task list updated successfully!
-Program: ?? Goodbye Kedar!
+Program: 💾 Task list updated successfully!
+Program: 👋 Goodbye Kedar!
 ```
 
 Notes about the current behavior:
@@ -189,9 +206,15 @@ Notes about the current behavior:
 - `show pending` also includes overdue tasks, because overdue tasks still have `Status = false`.
 - The exact remaining-time text changes based on the current date and time.
 
-## ?? JSON Structure
+## 📁 JSON Structure
 
 Tasks are stored like this:
+You: delete 1 2
+Bot: Deleted! Your list looks cleaner now.
+     Alright, that task is deleted.
+
+You: show
+Bot: 💭 No tasks available. Add one!
 
 ```json
 {
@@ -207,13 +230,15 @@ Tasks are stored like this:
 }
 ```
 
-## ??? Implementation Notes
+## 🛠️ Implementation Notes
 
 - The application stores priority internally as a symbol, even though the user types `high`, `medium`, `low`, or `normal`.
 - Overdue and remaining time are calculated when tasks are displayed.
+- `done 1 7` and `delete 1 2` work because the chatbot extracts every number in the message and applies the action to each one.
+- __You can delete or mark multiple tasks.__
 - Some console text in the current source files shows encoding issues on some terminals, but the core functionality still runs.
 
-## ?? What This Project Demonstrates
+## 🧠 What This Project Demonstrates
 
 1. Object-oriented Python design
 2. JSON file handling

@@ -1,0 +1,6 @@
+*.txt
+!requirements.txt
+__pycache__/
+*.pyc[cod]
+.env
+.vscode/

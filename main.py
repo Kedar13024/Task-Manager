@@ -1,28 +1,27 @@
 from task_manager import TaskManager
 from chatbot import chatbot
+import coloring as cg
 
 def main():
-
+    cg.banner(f"\n✨ Welcome to the TASK MANAGER ✨")
     filepath = "mytasks.json"
 
     username = input("👤 Enter your name: ")
 
     manager = TaskManager(filepath, username)
-
+    cg.loading()
     manager.read_data()
-
-    print(f"\n✨ Welcome {username} to the TO-DO Assistant ✨")
+  
 
     while True:
 
-        userInput = input("You: ")
+        userInput =input("YOU:")
+        cg.user(userInput)
 
         if userInput.lower() in ["exit", "quit", "bye", "end"]:
-            print("💾 Task list updated successfully!")
-            print(f"👋 Goodbye {username}!")
+            cg.updating()
+            cg.bot(f"👋 Goodbye {username}!")
             break
-
-        print("Bot:", end=" ")
         chatbot(manager, userInput)
 
 if __name__ == "__main__":

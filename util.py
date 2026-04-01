@@ -1,9 +1,9 @@
-from datetime import datetime
+﻿from datetime import datetime
 """
 Calculates remaining time until task deadline.
 Returns:
-- "❌ Overdue"
-- "⚠️ Due soon"
+- "Overdue"
+- "Due soon"
 - "Xd Xh Xm left"
 """
 def dueDate(due_date_str):
@@ -14,10 +14,10 @@ def dueDate(due_date_str):
     remaining = due_date - now
 
     if remaining.total_seconds() < 0:
-        return "❌ Overdue"
+        return "Overdue"
 
     if remaining.days == 0 and remaining.seconds <= 3600:
-        return "⚠️ Due soon"
+        return "Due soon"
 
     days = remaining.days
     hours = remaining.seconds // 3600

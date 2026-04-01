@@ -1,2 +1,3 @@
-os
-dateparsor
+dateparser
+rich
+tqdm

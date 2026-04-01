@@ -87,118 +87,11 @@ The app supports these display modes through chatbot input:
 
 The chatbot uses random reply variants for greetings, add, delete, mark-complete, and error messages, so the exact wording may differ. The conversation below is a realistic sample based on the current code.
 
-```text
-Program: 👤 Enter your name: Kedar
-Program: 📂 Task data loaded successfully!
-
-Program: ✨ Welcome Kedar to the TO-DO Assistant ✨
-
-You: hello
-Bot: Welcome back Kedar! ✨
-
-You: show
-Bot: 💭 No tasks available. Add one!
-
-You: show menu
-Bot: 💭 No tasks available. Add one!
-
-You: add finish python assignment
-Bot: ⚠️ Please enter valid date!
-
-You: add finish python assignment due tomorrow high
-Bot: 🚀 Task added successfully!
-
-You: add buy groceries by 2026-03-15 low
-Bot: Your task has been added!
-
-You: add renew passport id 7 due 2025-01-01 medium
-Bot: Done! Task saved successfully.
-
-You: show
-Bot:
- 📋 Your Task List
- ------------------------------------------------------------------------------------------
- Task  Description                   Priority        Status              Due Time
- ------------------------------------------------------------------------------------------
- 1     finish python assignment      🔴              ⏳ Pending           0d 12h 0m left
- ------------------------------------------------------------------------------------------
- 2     buy groceries                 🟢              ⏳ Pending           4d 6h 0m left
- ------------------------------------------------------------------------------------------
- 7     renew passport                🟡              ❌ Overdue           -
- ------------------------------------------------------------------------------------------
-
-You: show pending
-Bot:
- 📋 Your Task List
- ------------------------------------------------------------------------------------------
- Task  Description                   Priority        Status              Due Time
- ------------------------------------------------------------------------------------------
- 1     finish python assignment      🔴              ⏳ Pending           0d 12h 0m left
- ------------------------------------------------------------------------------------------
- 2     buy groceries                 🟢              ⏳ Pending           4d 6h 0m left
- ------------------------------------------------------------------------------------------
- 7     renew passport                🟡              ❌ Overdue           -
- ------------------------------------------------------------------------------------------
-
-You: show overdue
-Bot:
- 📋 Your Task List
- ------------------------------------------------------------------------------------------
- Task  Description                   Priority        Status              Due Time
- ------------------------------------------------------------------------------------------
- 7     renew passport                🟡              ❌ Overdue           -
- ------------------------------------------------------------------------------------------
-
-You: done 2
-Bot: Task successfully completed.
-
-You: show completed
-Bot:
- 📋 Your Task List
- ------------------------------------------------------------------------------------------
- Task  Description                   Priority        Status              Due Time
- ------------------------------------------------------------------------------------------
- 2     buy groceries                 🟢              ✅ Done              -
- ------------------------------------------------------------------------------------------
-
-You: done 1 7
-Bot: I've marked that task as finished.
-Bot: Task successfully completed.
-
-You: show completed
-Bot:
- 📋 Your Task List
- ------------------------------------------------------------------------------------------
- Task  Description                   Priority        Status              Due Time
- ------------------------------------------------------------------------------------------
- 1     finish python assignment      🔴              ✅ Done              -
- ------------------------------------------------------------------------------------------
- 2     buy groceries                 🟢              ✅ Done              -
- ------------------------------------------------------------------------------------------
- 7     renew passport                🟡              ✅ Done           -
- ------------------------------------------------------------------------------------------
-
-You: show menu
-Bot:
- 📌 [MENU]
- +----------------------------+
- | 1️⃣  Add a new task         |
- | 2️⃣  Display all tasks      |
- | 3️⃣  Mark task completed    |
- | 4️⃣  Delete task            |
- | 5️⃣  Exit program           |
- +----------------------------+
-
-You: remove 7
-Bot: Task removed successfully. 🗑️
-
-You: tell me a joke
-Bot: Sorry, I didn't understand that. 🤔
-
-You: quit
-Program: 💾 Task list updated successfully!
-Program: 👋 Goodbye Kedar!
-```
+![demo](./images/img1.png)
+![demo](./images/img2.png)
+![demo](./images/img3.png)
+![demo](./images/img4.png)
+![demo](./images/img5.png)
 
 Notes about the current behavior:
 
@@ -209,12 +102,6 @@ Notes about the current behavior:
 ## 📁 JSON Structure
 
 Tasks are stored like this:
-You: delete 1 2
-Bot: Deleted! Your list looks cleaner now.
-     Alright, that task is deleted.
-
-You: show
-Bot: 💭 No tasks available. Add one!
 
 ```json
 {
@@ -234,8 +121,8 @@ Bot: 💭 No tasks available. Add one!
 
 - The application stores priority internally as a symbol, even though the user types `high`, `medium`, `low`, or `normal`.
 - Overdue and remaining time are calculated when tasks are displayed.
-- `done 1 7` and `delete 1 2` work because the chatbot extracts every number in the message and applies the action to each one.
-- __You can delete or mark multiple tasks.__
+- `done 1     7` and `delete 1 ,2` work because the chatbot extracts every number in the message and applies the action to each one.
+- **You can delete or mark multiple tasks.**
 - Some console text in the current source files shows encoding issues on some terminals, but the core functionality still runs.
 
 ## 🧠 What This Project Demonstrates
@@ -244,4 +131,5 @@ Bot: 💭 No tasks available. Add one!
 2. JSON file handling
 3. Input parsing with regular expressions
 4. Basic validation and persistence
-5. CLI-based task management
+5. Interactive CLI chatbot-based task management
+6. Colorful CLI.

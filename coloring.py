@@ -3,11 +3,10 @@ from rich import box
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
-from rich.prompt import Prompt
 from tqdm import tqdm
 from rich.columns import Columns
 from time import sleep
-console=Console()
+console=Console(record=True)
 def processing():
     for steps in tqdm(range(5),desc="Processing..."):
         sleep(0.3)

@@ -9,12 +9,15 @@ A command-line task manager built with Python. Tasks are stored in `mytasks.json
 - 🤖 Natural-language style commands such as `add`, `show`, `done`, and `delete`
 - 📝 Task fields for ID, description, status, due date, and priority
 - 📋 Filters for all, completed, pending, and overdue tasks
+- 🎨 Colorful and chat-style UI
 - 💾 Auto-save after add, update, and delete actions
 
 ## 🧰 Requirements
 
 - Python 3.10+
 - `dateparser`
+- `rich`
+- `tqdm`
 - Works on Windows, macOS, and Linux
 
 ## 📦 Installation
@@ -41,6 +44,7 @@ You will be prompted for your name, then the app loads `mytasks.json`. If the fi
 - `task_manager.py` - task storage and task operations
 - `chatbot.py` - regex-based command parsing
 - `util.py` - due date calculations
+- `coloring.py`- includes rich module functions
 - `mytasks.json` - persisted task data
 
 ## 🤖 Chatbot Commands
